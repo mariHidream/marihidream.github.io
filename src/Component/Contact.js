@@ -1,5 +1,5 @@
 import React from 'react';
-import transition from '../transition';
+import slideTransition from '../slideTransition';
 
 const Contact = () => {
     return (
@@ -9,4 +9,4 @@ const Contact = () => {
     );
 };
 
-export default transition(Contact);
+export default slideTransition(Contact);
