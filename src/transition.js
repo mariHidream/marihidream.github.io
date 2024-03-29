@@ -1,7 +1,7 @@
 import {motion} from "framer-motion"
 
-const transition = (OgComponent) => {
-    return ()=>{
+const slideTransition = (OgComponent) => {
+    return ()=>(
         <>
             <OgComponent />
             <motion.div 
@@ -19,7 +19,7 @@ const transition = (OgComponent) => {
                 transition={{duration: 1, ease : [0.22, 1, 0.36, 1]}}
             />
         </>
-    }
+    )
 }
 
-export default transition;
+export default slideTransition;
