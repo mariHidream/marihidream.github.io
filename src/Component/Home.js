@@ -1,5 +1,5 @@
 import React from 'react';
-import transition from '../transition';
+import slideTransition from '../slideTransition';
 
 
 const Home = () => {
@@ -10,4 +10,4 @@ const Home = () => {
     );
 };
 
-export default transition(Home);
+export default slideTransition(Home);
