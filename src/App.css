@@ -55,7 +55,7 @@ a{
   transform-origin: bottom;
 }
 
-.slide-in{
+.slide-out{
   position: fixed;
   top: 0;
   left: 0;
