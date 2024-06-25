@@ -4,7 +4,7 @@ import slideTransition from '../slideTransition';
 const About = () => {
     return (
         <div>
-            <h2>About</h2>
+            <h2 className='text-transparent'>About</h2>
         </div>
     );
 };
