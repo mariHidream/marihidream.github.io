@@ -3,10 +3,10 @@ import './App.css'
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
-import NavBar from './Component/Navbar';
-import Home from './Component/Home';
-import About from './Component/About';
-import Contact from './Component/Contact';
+import NavBar from './components/Navbar';
+import Home from './components/Home';
+import About from './components/About';
+import Contact from './components/Contact';
 
 
 function App() {

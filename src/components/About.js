@@ -4,7 +4,10 @@ import slideTransition from '../slideTransition';
 const About = () => {
     return (
         <div>
-            <h2 className='text-transparent'>About</h2>
+            <h2 className=''>About</h2>
+            <div className='mobile:text-center'>
+                ho
+            </div>
         </div>
     );
 };
