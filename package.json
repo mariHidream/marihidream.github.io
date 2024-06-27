@@ -24,9 +24,8 @@
     "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start -p 3001",
-    "lint": "next lint",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "deploy": "gh-pages -d .next"
   },
   "eslintConfig": {
     "extends": [
