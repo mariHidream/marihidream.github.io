@@ -1,12 +1,12 @@
 import React from 'react';
 
-export default function About() {
-    return (
-        <div>
-            <h2>About</h2>
-            <div className='xs:text-center'>
-                ho
-            </div>
-        </div>
-    );
+const AboutPage: React.FC = () => {
+  return (
+    <div>
+      <h1>About Page</h1>
+      <p>This is the about page content.</p>
+    </div>
+  );
 };
+
+export default AboutPage;

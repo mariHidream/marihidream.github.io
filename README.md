@@ -41,6 +41,8 @@ Nice to meet you 🖐
 ![Green Sock](https://img.shields.io/badge/green%20sock-88CE02?style=for-the-badge&logo=greensock&logoColor=white)
 ![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
 ![React.js](https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![TypeScript.js](https://img.shields.io/badge/typescript-61DAFB?style=for-the-badge&logo=typescript&logoColor=black)
+![Next.js](https://img.shields.io/badge/next-61DAFB?style=for-the-badge&logo=next&logoColor=black)
   
 ###### 🔧 Version Control
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
