@@ -5,45 +5,45 @@
   "devFiles": [],
   "ampDevFiles": [],
   "lowPriorityFiles": [
-    "static/LtGz9li1YMdr7gLMaAJEM/_buildManifest.js",
-    "static/LtGz9li1YMdr7gLMaAJEM/_ssgManifest.js"
+    "static/fIp_rJXXiReZWwWO-JFcA/_buildManifest.js",
+    "static/fIp_rJXXiReZWwWO-JFcA/_ssgManifest.js"
   ],
   "rootMainFiles": [],
   "pages": {
     "/": [
-      "static/chunks/webpack-4e7214a60fad8e88.js",
+      "static/chunks/webpack-0111495c355ef9e6.js",
       "static/chunks/framework-2c16ac744b6cdea6.js",
-      "static/chunks/main-be89c515900796e7.js",
+      "static/chunks/main-91c87ead678f8394.js",
       "static/chunks/pages/index-0f25e4fa13e7c21f.js"
     ],
     "/_app": [
-      "static/chunks/webpack-4e7214a60fad8e88.js",
+      "static/chunks/webpack-0111495c355ef9e6.js",
       "static/chunks/framework-2c16ac744b6cdea6.js",
-      "static/chunks/main-be89c515900796e7.js",
+      "static/chunks/main-91c87ead678f8394.js",
       "static/chunks/pages/_app-753213cf38d40131.js"
     ],
     "/_error": [
-      "static/chunks/webpack-4e7214a60fad8e88.js",
+      "static/chunks/webpack-0111495c355ef9e6.js",
       "static/chunks/framework-2c16ac744b6cdea6.js",
-      "static/chunks/main-be89c515900796e7.js",
+      "static/chunks/main-91c87ead678f8394.js",
       "static/chunks/pages/_error-77823ddac6993d35.js"
     ],
     "/about": [
-      "static/chunks/webpack-4e7214a60fad8e88.js",
+      "static/chunks/webpack-0111495c355ef9e6.js",
       "static/chunks/framework-2c16ac744b6cdea6.js",
-      "static/chunks/main-be89c515900796e7.js",
+      "static/chunks/main-91c87ead678f8394.js",
       "static/chunks/pages/about-b6ebce92f61555f9.js"
     ],
     "/posts": [
-      "static/chunks/webpack-4e7214a60fad8e88.js",
+      "static/chunks/webpack-0111495c355ef9e6.js",
       "static/chunks/framework-2c16ac744b6cdea6.js",
-      "static/chunks/main-be89c515900796e7.js",
+      "static/chunks/main-91c87ead678f8394.js",
       "static/chunks/pages/posts-c9260233d1dfa0a4.js"
     ],
     "/posts/[id]": [
-      "static/chunks/webpack-4e7214a60fad8e88.js",
+      "static/chunks/webpack-0111495c355ef9e6.js",
       "static/chunks/framework-2c16ac744b6cdea6.js",
-      "static/chunks/main-be89c515900796e7.js",
+      "static/chunks/main-91c87ead678f8394.js",
       "static/chunks/pages/posts/[id]-82ff2a445ec15d21.js"
     ]
   },

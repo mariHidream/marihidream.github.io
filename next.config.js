@@ -8,4 +8,6 @@ module.exports = {
     // ESLint 설정을 추가합니다.
     dirs: ['src/pages'], // src/pages 디렉토리에서 ESLint 검사를 수행하도록 설정합니다.
   },
+  basePath: '/marihidream.github.io',
+  assetPrefix: '/marihidream.github.io/',
 };
