@@ -1,7 +1,7 @@
 const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
-  output: 'export',
+  output: "export",
   pageExtensions: ['jsx', 'js', 'ts', 'tsx'], // 페이지 파일의 확장자 설정
   webpack(config, options) {
     config.resolve.modules.push(__dirname); // 절대 경로 설정을 위해 현재 디렉토리를 추가합니다.
@@ -13,5 +13,5 @@ module.exports = {
   },
   trailingSlash: true,
   reactStrictMode: true,
-  assetPrefix: isProd ? 'https://marihidream.github.io' : ''
+  basePath: isProd ? 'https://marihidream.github.io' : ''
 };
