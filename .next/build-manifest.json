@@ -5,45 +5,45 @@
   "devFiles": [],
   "ampDevFiles": [],
   "lowPriorityFiles": [
-    "static/KMGlKHgmuxsYA-QmWEOYv/_buildManifest.js",
-    "static/KMGlKHgmuxsYA-QmWEOYv/_ssgManifest.js"
+    "static/xHMQCzw8JO2_YsVODzyHR/_buildManifest.js",
+    "static/xHMQCzw8JO2_YsVODzyHR/_ssgManifest.js"
   ],
   "rootMainFiles": [],
   "pages": {
     "/": [
       "static/chunks/webpack-a044fd5ca69eac83.js",
       "static/chunks/framework-2c16ac744b6cdea6.js",
-      "static/chunks/main-be89c515900796e7.js",
+      "static/chunks/main-be7765ac4d8f6ecc.js",
       "static/chunks/pages/index-0f25e4fa13e7c21f.js"
     ],
     "/_app": [
       "static/chunks/webpack-a044fd5ca69eac83.js",
       "static/chunks/framework-2c16ac744b6cdea6.js",
-      "static/chunks/main-be89c515900796e7.js",
+      "static/chunks/main-be7765ac4d8f6ecc.js",
       "static/chunks/pages/_app-753213cf38d40131.js"
     ],
     "/_error": [
       "static/chunks/webpack-a044fd5ca69eac83.js",
       "static/chunks/framework-2c16ac744b6cdea6.js",
-      "static/chunks/main-be89c515900796e7.js",
+      "static/chunks/main-be7765ac4d8f6ecc.js",
       "static/chunks/pages/_error-77823ddac6993d35.js"
     ],
     "/about": [
       "static/chunks/webpack-a044fd5ca69eac83.js",
       "static/chunks/framework-2c16ac744b6cdea6.js",
-      "static/chunks/main-be89c515900796e7.js",
-      "static/chunks/pages/about-b6ebce92f61555f9.js"
+      "static/chunks/main-be7765ac4d8f6ecc.js",
+      "static/chunks/pages/about-63bd50b97901c840.js"
     ],
     "/posts": [
       "static/chunks/webpack-a044fd5ca69eac83.js",
       "static/chunks/framework-2c16ac744b6cdea6.js",
-      "static/chunks/main-be89c515900796e7.js",
+      "static/chunks/main-be7765ac4d8f6ecc.js",
       "static/chunks/pages/posts-c9260233d1dfa0a4.js"
     ],
     "/posts/[id]": [
       "static/chunks/webpack-a044fd5ca69eac83.js",
       "static/chunks/framework-2c16ac744b6cdea6.js",
-      "static/chunks/main-be89c515900796e7.js",
+      "static/chunks/main-be7765ac4d8f6ecc.js",
       "static/chunks/pages/posts/[id]-82ff2a445ec15d21.js"
     ]
   },
