@@ -13,5 +13,5 @@ module.exports = {
   },
   trailingSlash: true,
   reactStrictMode: true,
-  basePath: isProd ? 'https://marihidream.github.io' : ''
+  assetPrefix: isProd ? 'https://marihidream.github.io' : ''
 };
