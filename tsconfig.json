@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5", //ECMAScript 타겟 버전을 설정합니다.
-    "lib": ["dom", "dom.iterable", "esnext"], //프로젝트에서 사용할 라이브러리를 설정합니다.
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ], //프로젝트에서 사용할 라이브러리를 설정합니다.
     "allowJs": true, //javaScript 파일을 허용합니다.
     "skipLibCheck": true, //라이브러리 파일의 타입 검사를 건너뜁니다.
     "strict": true, //모든 엄격한 타입 검사 옵션을 활성화합니다.
@@ -16,10 +20,24 @@
     "incremental": true, //증분 컴파일을 활성화합니다.??
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]  // 프로젝트 내에서 @/로 시작하는 경로를 ./src/로 매핑  
+      "@/*": [
+        "src/*"
+      ] // 프로젝트 내에서 @/로 시작하는 경로를 ./src/로 매핑
     },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/**/*.ts", "src/**/*.tsx"], //모든 타입스크립트 파일, 모든 타입스크립트와 JSX 파일
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".next/types/**/*.ts"
+  ], //모든 타입스크립트 파일, 모든 타입스크립트와 JSX 파일
   "exclude": [
     "node_modules"
   ]
