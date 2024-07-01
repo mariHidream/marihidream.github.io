@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 // menu Props type define 
@@ -14,19 +15,22 @@ const menu:MenuItemProps[] = [
   {name:'소개', id:'about'},
   {name:'예약', id:'reservation'},
   {name:'갤러리', id:'gallery'},
-  {name:'next', id:'posts'},
+  {name:'포스트', id:'posts'},
 ]
 
 
 const Header: React.FC = () => {
   return (
     <>
-      <header>
+      <header className='bg-gray-800'>
         <h1><a href="/">main</a></h1>
         <nav>
           <ul>
-            <li><a href="/about">About</a></li>
-            <li><a href="/posts">Post</a></li>
+            {menu.map((item) => (
+                <li key={item.id}>
+                  <a href={`/${item.id}`}>{item.name}</a>
+                </li>
+            ))}
           </ul>
         </nav>
       </header>
