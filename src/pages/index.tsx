@@ -1,7 +1,8 @@
 
 import Header from '@/components/Header';
 import React from 'react';
-import '@/styles/globals.module.css'
+import '@/styles/global.module.css'
+
 
 const HomePage: React.FC = () => {
   return (
