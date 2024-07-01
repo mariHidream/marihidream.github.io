@@ -1,13 +1,13 @@
 
-// import Button from '@/components/ui/button';
+import Header from '@/components/Header';
 import React from 'react';
+import '@/styles/globals.module.css'
 
 const HomePage: React.FC = () => {
   return (
     <div>
-      <h1>Home Page</h1>
-      <p>This is the home page content.</p>
-      {/* <Button/> */}
+      <Header></Header>
+      <div className='text-center'>main contents</div>
     </div>
   );
 };

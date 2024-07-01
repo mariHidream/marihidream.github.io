@@ -3,8 +3,15 @@ import React from 'react';
 const Header: React.FC = () => {
   return (
     <header>
-        <h1><a href="/"></a></h1>
-
+        <h1 className='p-2 font-bold text-red-500'><a href="/">main</a></h1>
+        <nav>
+          <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+        </nav>
     </header>
   );
 };

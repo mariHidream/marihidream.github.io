@@ -47,8 +47,10 @@
     ]
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.19",
     "eslint-plugin-next": "^0.0.0",
-    "gh-pages": "^6.1.1"
+    "gh-pages": "^6.1.1",
+    "postcss": "^8.4.39"
   },
   "homepage": "https://marihidream.github.io/"
 }
