@@ -1,4 +1,5 @@
 
+import clsx from 'clsx';
 import React from 'react';
 
 // menu Props type define 
@@ -22,12 +23,12 @@ const menu : MenuItemProps[] = [
 const Header: React.FC = () => {
   return (
     <>
-      <header>
-        <h1 className="text-blue-500"><a href="/">main</a></h1>
-        <nav>
-          <ul>
+      <header className="flex items-start justify-center">
+        <h1 className="px-10 py-5 mr-5"><a href="/">main</a></h1>
+        <nav className="py-5">
+          <ul className="flex items-center justify-between">
             {menu.map((item) => (
-                <li key={item.id}>
+                <li key={item.id} className='px-8'>
                   <a href={`/${item.id}`}>{item.name}</a>
                 </li>
             ))}

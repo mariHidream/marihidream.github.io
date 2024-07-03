@@ -17,11 +17,11 @@
     "isolatedModules": true, //각 파일을 고립된 모듈로 처리합니다.
     "jsx": "preserve", //JSX 코드의 처리를 설정합니다.
     "forceConsistentCasingInFileNames": true,
-    "incremental": true, //증분 컴파일을 활성화합니다.??
+    "incremental": true,
     "baseUrl": "./",
     "paths": {
       "@/*": [
-        "src/*"
+        "./src/*"
       ] // 프로젝트 내에서 @/로 시작하는 경로를 ./src/로 매핑
     },
     "plugins": [
