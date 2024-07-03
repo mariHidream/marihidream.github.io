@@ -1,4 +1,4 @@
-import '../styles/global.css';  // CSS 모듈이 아닌 일반 CSS 파일 가져오기
+import '@/app/global.css';  // CSS 모듈이 아닌 일반 CSS 파일 가져오기
 import React, { ReactNode } from 'react';
 import Footer from '@/app/Footer';
 import Header from '@/app/Header';

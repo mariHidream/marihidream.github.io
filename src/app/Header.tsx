@@ -11,7 +11,7 @@ interface MenuItemProps {
   type?: 'pc' | 'mo'
 }
 
-const menu:MenuItemProps[] = [
+const menu : MenuItemProps[] = [
   {name:'소개', id:'about'},
   {name:'예약', id:'reservation'},
   {name:'갤러리', id:'gallery'},
@@ -22,8 +22,8 @@ const menu:MenuItemProps[] = [
 const Header: React.FC = () => {
   return (
     <>
-      <header className='bg-gray-800'>
-        <h1><a href="/">main</a></h1>
+      <header>
+        <h1 className="text-blue-500"><a href="/">main</a></h1>
         <nav>
           <ul>
             {menu.map((item) => (
