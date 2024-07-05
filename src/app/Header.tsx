@@ -23,12 +23,12 @@ const menu : MenuItemProps[] = [
 const Header: React.FC = () => {
   return (
     <>
-      <header className="flex items-start justify-center">
-        <h1 className="px-10 py-5 mr-5"><a href="/">main</a></h1>
-        <nav className="py-5">
+      <header className="w-full flex items-start bg-[#ddd]">
+        <h1 className="mr-2 w-1/5"><a href="/">main</a></h1>
+        <nav className="w-4/5">
           <ul className="flex items-center justify-between">
             {menu.map((item) => (
-                <li key={item.id} className='px-8'>
+                <li key={item.id} className='px-2'>
                   <a href={`/${item.id}`}>{item.name}</a>
                 </li>
             ))}

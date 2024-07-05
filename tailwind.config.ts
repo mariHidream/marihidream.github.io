@@ -6,6 +6,9 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx}', // app 폴더 내의 모든 JavaScript/TypeScript 파일 (Next.js 13의 경우)
   ],
   theme: {
+    container : {
+      center : true
+    },
     screens: {
      
     },
