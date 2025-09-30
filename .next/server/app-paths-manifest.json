@@ -1,7 +1,8 @@
 {
-  "/page": "app/page.js",
-  "/about/page": "app/about/page.js",
-  "/reservation/page": "app/reservation/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/gallery/page": "app/gallery/page.js",
-  "/posts/page": "app/posts/page.js"
+  "/page": "app/page.js",
+  "/posts/page": "app/posts/page.js",
+  "/reservation/page": "app/reservation/page.js",
+  "/about/page": "app/about/page.js"
 }
