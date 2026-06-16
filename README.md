@@ -22,7 +22,6 @@ Nice to meet you 🖐
 ###### 🌐 Browsers & social  
 ![Samsung](https://img.shields.io/badge/Samsung-%231428A0.svg?style=for-the-badge&logo=samsung&logoColor=white)
 ![Google](https://img.shields.io/badge/google-4285F4?style=for-the-badge&logo=google&logoColor=white)
-![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?style=for-the-badge&logo=Instagram&logoColor=white)
 ![KakaoTalk](https://img.shields.io/badge/kakaotalk-ffcd00.svg?style=for-the-badge&logo=kakaotalk&logoColor=000000)
 ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
 ![Mac OS](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=macos&logoColor=F0F0F0)
@@ -42,7 +41,7 @@ Nice to meet you 🖐
 ![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
 ![React.js](https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![TypeScript.js](https://img.shields.io/badge/typescript-61DAFB?style=for-the-badge&logo=typescript&logoColor=black)
-![Next.js](https://img.shields.io/badge/next-61DAFB?style=for-the-badge&logo=next&logoColor=black)
+![Next.js](https://img.shields.io/badge/NextJs-61DAFB?style=for-the-badge&logo=Next-Js&logoColor=black)
   
 ###### 🔧 Version Control
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)

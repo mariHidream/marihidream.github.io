@@ -1,57 +1,28 @@
 {
-  "name": "mari_app",
+  "name": "marihidream.github.io",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^29.5.12",
-    "@types/node": "^20.14.9",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "clsx": "^2.1.1",
-    "framer-motion": "^11.0.23",
-    "next": "^14.2.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.3",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
-  },
+  "homepage": "https://marihidream.github.io/",
   "scripts": {
     "dev": "next dev -p 3001",
-    "start": "next start -p 3001",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "build": "next build",
-    "export": "next build && next export",
+    "start": "next start -p 3001",
+    "lint": "next lint",
     "deploy": "next build && touch out/.nojekyll && git add -f out/ && git commit -m \"Deploy\" && git subtree push --prefix out origin gh-pages"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "next": "16.2.9",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.19",
-    "eslint-plugin-next": "^0.0.0",
-    "gh-pages": "^6.1.1",
-    "postcss": "^8.4.39",
-    "tailwindcss": "^3.4.4"
-  },
-  "homepage": "https://marihidream.github.io/"
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.9",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
 }

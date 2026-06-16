@@ -1,1 +1,0 @@
-self.__NEXT_FONT_MANIFEST='{"pages":{},"app":{"/Users/kimjuyeon/Documents/study/portfolio/mari_app/src/app/layout":[]},"appUsingSizeAdjust":true,"pagesUsingSizeAdjust":false}';
