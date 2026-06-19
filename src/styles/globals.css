@@ -1,0 +1,79 @@
+
+@import "./fonts.css";
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --font-pretendard : 'Pretendard', Arial, Helvetica, sans-serif;
+  --swiper-navigation-sides-offset : 30px;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-pretendard);
+}
+
+
+/* Swiper 테마 디자인 커스텀 오버라이딩 */
+.theme-swiper-wrapper {
+  /* 1. 네비게이션 화살표 커스텀 */
+  --swiper-navigation-color: #11CAA0; /* Teal 컬러 변수 강제 대입 */
+  --swiper-navigation-size: 28px;
+}
+
+/* 화살표 버튼 배경 및 원형 영역 커스텀 */
+.theme-swiper-wrapper .swiper-button-next,
+.theme-swiper-wrapper .swiper-button-prev {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.theme-swiper-wrapper .swiper-navigation-icon {
+  width: 50%;
+  height: 50%;
+}
+
+.theme-swiper-wrapper .swiper-button-next:hover,
+.theme-swiper-wrapper .swiper-button-prev:hover {
+  background: #11CAA0;
+  color: #020617; /* slate-950 */
+  box-shadow: 0 0 15px rgba(17, 202, 160, 0.4);
+}
+
+/* 화살표 폰트 굵기 보정 */
+.theme-swiper-wrapper .swiper-button-next::after,
+.theme-swiper-wrapper .swiper-button-prev::after {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* 2. 하단 인디케이터 도트 커스텀 */
+.theme-swiper-wrapper .swiper-pagination-bullet {
+  background: #475569; /* slate-600 */
+  opacity: 1;
+  width: 8px;
+  height: 8px;
+  transition: all 0.3s ease;
+}
+
+.theme-swiper-wrapper .swiper-pagination-bullet-active {
+  background: #11CAA0 !important; /* 활성화 시 테마 색상 */
+  width: 24px;                  /* 롯데시네마 스타일의 확장 바 형태 구현 */
+  border-radius: 4px;
+}

@@ -19,7 +19,11 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@src/*": ["./src/*"],
+      "@public/*": ["./public/*"],             // public 정적 자원 폴더 직행
+      "@components/*": ["./src/components/*"], // 컴포넌트 폴더 직행
+      "@styles/*": ["./src/styles/*"]          // 스타일 폴더 직행p
     }
   },
   "include": [
