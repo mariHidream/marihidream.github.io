@@ -6,9 +6,10 @@ import MainHeader from "@components/layout/MainHeader";
 
 export default async function Page() {
   // 1. 서비스 엔진 레이어를 통해 API 병렬 페칭 (성능 극대화)
-  const [nowPlayingMovies, boxOfficeMovies] = await Promise.all([
-    movieService.getNowPlaying(),
-    movieService.getBoxOffice()
+  const [nowPlayingMovies, boxOfficeMovies, upcomingMovies] = await Promise.all([
+    movieService.getNowPlaying(5),
+    movieService.getBoxOffice(),
+    movieService.getUpcoming(10)
   ]);
 
   

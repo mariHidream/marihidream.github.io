@@ -17,7 +17,7 @@ const getDeterministicAgeRating = (id: number): 'ALL' | '12' | '15' | '19' => {
 
 export const movieService = {
     // 1. 비쥬얼 영역용: 현재 상영중인 영화 (TMDB Now Playing)
-    getNowPlaying : async (): Promise<MovieBase[]> => {
+    getNowPlaying : async (limit?: number): Promise<MovieBase[]> => {
 
         const res = await fetch(
             `${TMDB_BASE_URL}/movie/now_playing?api_key=${process.env.TMDB_API_KEY}&language=ko-KR&region=KR&page=1`,
@@ -26,13 +26,19 @@ export const movieService = {
 
         const data = await res.json();
 
-        let filteredMovies = data.results || [];
+        let movies = (data.results || []).filter((movie: any) => movie.backdrop_path !== null);
+        
+        movies = movies.filter((movie: any) => movie.popularity > 50 || movie.vote_count > 10);
 
-        filteredMovies = filteredMovies.filter((movie: any) => movie.popularity > 50 || movie.vote_count > 10);
+
+        // 💡 limit 인자가 전달된 경우에만 해당 개수만큼 자릅니다.
+        if (limit) {
+            movies = movies.slice(0, limit);
+        }
 
         // 만약 "한국+해외 영화를 모두 보여주되, 아무도 모르는 마이너한 인도/독립 영화를 거르고 싶다"면
         // TMDB의 투표수(vote_count)나 인기도(popularity)가 일정 수치 이상인 메이저 상업 영화만 필터링합니다.
-        return filteredMovies.filter((movie: any) => movie.backdrop_path !== null).slice(0, 5).map((movie: any) => ({
+        return movies.map((movie: any) => ({
             id: movie.id,
             title: movie.title,
             posterPath: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
@@ -179,5 +185,37 @@ export const movieService = {
                 createdAt: r.created_at.split('T')[0],
             })) || [],
         };
+    },
+
+
+    getUpcoming : async (limit?: number): Promise<MovieBase[]> => {
+        const res = await fetch(
+            `${TMDB_BASE_URL}/movie/upcoming?api_key=${process.env.TMDB_API_KEY}&language=ko-KR&region=KR&page=1`,
+            { next: { revalidate: 3600 } }
+        );
+
+        const data = await res.json();
+        const today = new Date().toISOString().split('T')[0];
+
+        // 필터 및 개봉일 기준 오름차순 정렬
+        let movies = (data.results || [])
+            .filter((movie: any) => movie.poster_path !== null && movie.release_date > today)
+            .sort((a: any, b: any) => new Date(a.release_date).getTime() - new Date(b.release_date).getTime());
+
+        // 💡 limit 인자가 전달된 경우에만 해당 개수만큼 자릅니다.
+        if (limit) {
+            movies = movies.slice(0, limit);
+        }
+
+        return movies.map((movie: any) => ({
+            id: movie.id,
+            title: movie.title,
+            posterPath: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+            backdropPath: movie.backdrop_path ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}` : '',
+            overview: movie.overview,
+            voteAverage: movie.vote_average,
+            releaseDate: movie.release_date,
+            ageRating: getDeterministicAgeRating(movie.id),
+        }));
     }
 }
