@@ -1,6 +1,6 @@
 import { movieService } from "@src/api/movieService";
-import MovieSection from "@components/layout/features/main/MovieSection";
-import VisualSlider from "@components/layout/features/main/VisualSlider";
+import MovieSection from "@/src/components/features/main/MovieSection";
+import VisualSlider from "@/src/components/features/main/VisualSlider";
 import MainFooter from "@components/layout/MainFooter";
 import MainHeader from "@components/layout/MainHeader";
 

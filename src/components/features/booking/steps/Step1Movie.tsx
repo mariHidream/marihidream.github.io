@@ -1,5 +1,6 @@
 "use client";
 
+import AgeRatingBadge from "@components/ui/AgeRatingBadge";
 import { useMovieBookingStore } from "@/src/hooks/useMovieBookingStore";
 import { MovieBase } from "@/src/types/movie";
 import { Check } from "lucide-react";
@@ -19,19 +20,22 @@ export default function Step1Movie({movies}: {movies: MovieBase[]}) {
                     const isSelected = selectedMovieId === movie.id;
                     return (
                         <button
-                        key={movie.id}
-                        onClick={() => selectMovie(movie.id, movie.title)}
-                        className={`relative flex flex-col items-center p-3 rounded-xl border-2 transition-all overflow-hidden ${
-                            isSelected 
-                            ? 'border-teal-500 bg-teal-500/10' 
-                            : 'border-slate-800 bg-slate-950/50 hover:border-slate-600'
-                        }`}
+                            key={movie.id}
+                            onClick={() => selectMovie(movie.id, movie.title)}
+                            className={`relative flex flex-col items-center p-3 rounded-xl border-2 transition-all overflow-hidden ${
+                                isSelected 
+                                ? 'border-teal-500 bg-teal-500/10' 
+                                : 'border-slate-800 bg-slate-950/50 hover:border-slate-600'
+                            }`}
                         >
-                        <img 
-                            src={movie.posterPath} 
-                            alt={movie.title}
-                            className="w-full aspect-[3/4] object-cover rounded-lg mb-3 shadow-md"
-                        />
+                        <div className="relative w-full aspect-[3/4] mb-3 shadow-md overflow-hidden rounded-lg"> {/* 이미지 래퍼 생성 */}
+                            <img src={movie.posterPath} alt={movie.title} className="w-full h-full object-cover" />
+                            
+                            {/* 💡 좌측 상단 연령 고정 오버레이 배지 */}
+                            <div className="absolute top-2 left-2 z-10 bg-slate-950/80 p-1 rounded backdrop-blur-sm">
+                                <AgeRatingBadge rating={movie.ageRating} />
+                            </div>
+                        </div>
                         <span className={`text-sm font-bold truncate w-full text-center ${isSelected ? 'text-teal-400' : 'text-slate-300'}`}>
                             {movie.title}
                         </span>

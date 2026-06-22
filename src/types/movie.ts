@@ -7,6 +7,7 @@ export interface MovieBase {
     overview : string; // 줄거리
     voteAverage : number; // 글로벌 평점
     releaseDate : string; // 개봉일
+    ageRating: 'ALL' | '12' | '15' | '19'; // 💡 관람 연령 규격 타입 추가
 }
 
 // 박스오피스 전용 확장 규격 (KOBIS 데이터 결합)

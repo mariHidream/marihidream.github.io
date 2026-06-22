@@ -3,7 +3,9 @@
 import { useMovieBookingStore } from "@/src/hooks/useMovieBookingStore";
 import { BoxOfficeMovie } from "@/src/types/movie";
 import { Star, TrendingUp } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from 'next/navigation';
+import AgeRatingBadge from "@components/ui/AgeRatingBadge";
 
 
 
@@ -57,6 +59,13 @@ export default function MovieSection ({ movies }: { movies: BoxOfficeMovie[] }) 
                                 >
                                     즉시 예매
                                 </button>
+
+                                <Link 
+                                    href={`/movies/${movie.id}`}
+                                    className="w-4/5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm rounded-xl text-center border border-slate-700 transition-transform transform translate-y-2 group-hover:translate-y-0"
+                                >
+                                    상세 정보
+                                </Link>
                             </div>
 
                             {/* 💡 [레퍼런스 고도화 포인트] 좌측 하단 거대 랭킹 타이포그래피 오버레이 */}
@@ -67,9 +76,12 @@ export default function MovieSection ({ movies }: { movies: BoxOfficeMovie[] }) 
 
                         {/* 영화 기본 메타데이터 정보 리포트 */}
                         <div className="space-y-1.5 pt-1 px-1">
-                            <h4 className="text-base font-black text-slate-100 tracking-tight truncate group-hover:text-white transition-colors">
+                            <div className="flex items-center gap-2 truncate"> {/* flex 구조로 변경 */}
+                                <AgeRatingBadge rating={movie.ageRating} />
+                                <h4 className="text-base font-black text-slate-100 tracking-tight truncate group-hover:text-white transition-colors">
                                 {movie.title}
-                            </h4>
+                                </h4>
+                            </div>
                             <div className="flex items-center gap-3 text-xs text-slate-400 font-bold">
                                 <div className="flex items-center gap-0.5 text-amber-400">
                                     <Star className="w-3.5 h-3.5 fill-current" />

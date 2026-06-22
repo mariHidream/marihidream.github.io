@@ -1,5 +1,5 @@
 import { movieService } from "@/src/api/movieService";
-import BookingWizard from "@components/layout/features/booking/BookingWizard";
+import BookingWizard from "@/src/components/features/booking/BookingWizard";
 
 
 export default async function BookingPage() {
