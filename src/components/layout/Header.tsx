@@ -4,7 +4,7 @@ import { useAuthStore } from '@/src/store/useAuthStore';
 import { CalendarCheck, Film, Menu, User } from 'lucide-react';
 import Link from 'next/link';
 
-export default function MainHeader (){
+export default function Header (){
 
     const {isAuthenticated, logout } = useAuthStore();
 

@@ -13,7 +13,7 @@ import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import AgeRatingBadge from '@components/ui/AgeRatingBadge';
+import AgeRatingBadge from '@/src/components/ui/Badges';
 
 interface VisualSliderProps {
   movies: MovieBase[];

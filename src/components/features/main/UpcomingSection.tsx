@@ -3,7 +3,7 @@
 import { MovieBase } from "@/src/types/movie";
 import { differenceInDays } from "date-fns";
 import Link from "next/link";
-import AgeRatingBadge from "@components/ui/AgeRatingBadge";
+import AgeRatingBadge from "@/src/components/ui/Badges";
 import { CalendarClock } from "lucide-react";
 
 

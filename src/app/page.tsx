@@ -1,23 +1,20 @@
-import { movieService } from "@src/api/movieService";
+import { movieService } from "@/src/app/api/movieService";
 import MovieSection from "@/src/components/features/main/MovieSection";
 import VisualSlider from "@/src/components/features/main/VisualSlider";
-import MainFooter from "@components/layout/MainFooter";
-import MainHeader from "@components/layout/MainHeader";
+import MainFooter from "@/src/components/layout/Footer";
+import MainHeader from "@/src/components/layout/Header";
 
 export default async function Page() {
   // 1. 서비스 엔진 레이어를 통해 API 병렬 페칭 (성능 극대화)
-  const [nowPlayingMovies, boxOfficeMovies, upcomingMovies] = await Promise.all([
+  const [nowPlayingMovies, boxOfficeMovies] = await Promise.all([
     movieService.getNowPlaying(5),
     movieService.getBoxOffice(),
-    movieService.getUpcoming(10)
   ]);
 
   
   return (
     <div className="w-full min-h-screen bg-slate-950 flex flex-col selection:bg-teal-500 selection:text-slate-950">
-      {/* 영화관 전용 상단 네비게이션 헤더 */}
-      <MainHeader />
-
+      
       {/* 롯데시네마 앰비언트 스크린 스타일 히어로 섹션 */}
       <VisualSlider movies={nowPlayingMovies} />
 
@@ -25,9 +22,7 @@ export default async function Page() {
       <div className="flex-grow bg-slate-950">
         <MovieSection movies={boxOfficeMovies} />
       </div>
-
-      {/* 공용 기업 명세 정보 푸터 */}
-      <MainFooter />
+     
     </div>
   );
 }

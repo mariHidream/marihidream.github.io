@@ -16,7 +16,7 @@ interface BookingWizardProps {
 
 
 export default function BookingWizard ({movies} : BookingWizardProps) {
-    const { currentStep, selectedMovieTitle, selectedDate, resetBooking } = useMovieBookingStore();
+    const { currentStep, selectedMovieTitle, selectedDate, selectedTheater, selectedSeats, totalPrice, resetBooking } = useMovieBookingStore();
 
     // 페이지 이탈 또는 컴포넌트 언마운트 시 예매 상태 초기화 방어 로직
     useEffect(() => {
@@ -68,7 +68,7 @@ export default function BookingWizard ({movies} : BookingWizardProps) {
             </div>
 
             {/* 우측: 실시간 예매 요약 사이드바 (Sticky) */}
-            <div className="w-full lg:w-1/3 bg-slate-900 border border-slate-800 rounded-2xl p-6 sticky top-24 shadow-xl">
+            <div className="w-full lg:w-1/3 bg-slate-900 border border-slate-800 rounded-2xl p-6 sticky top-30 shadow-xl">
                 <h3 className="text-xl font-black text-white mb-6 border-b border-slate-800 pb-4">예매 요약</h3>
                 
                 <div className="space-y-4 text-sm font-medium text-slate-300">
@@ -80,7 +80,18 @@ export default function BookingWizard ({movies} : BookingWizardProps) {
                         <span className="text-slate-500">관람 일자</span>
                         <span className="text-white">{selectedDate || '미선택'}</span>
                     </div>
-                    {/* 극장, 좌석, 금액 등은 이후 스텝에서 채워집니다. */}
+                    <div className="flex justify-between items-center py-2 border-b border-slate-800/50">
+                        <span className="text-slate-500">상영관</span>
+                        <span className="text-white">{selectedTheater || '미선택'}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-slate-800/50">
+                        <span className="text-slate-500">좌석</span>
+                        <span className="text-white">{selectedSeats.join(', ') || '미선택'}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-slate-800/50">
+                        <span className="text-slate-500">결제</span>
+                        <span className="text-white">{`${totalPrice.toLocaleString()}원`|| '0원'}</span>
+                    </div>
                 </div>
             </div>
         </div>

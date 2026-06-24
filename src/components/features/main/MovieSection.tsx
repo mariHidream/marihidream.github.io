@@ -5,7 +5,7 @@ import { BoxOfficeMovie } from "@/src/types/movie";
 import { Star, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
-import AgeRatingBadge from "@components/ui/AgeRatingBadge";
+import AgeRatingBadge from "@/src/components/ui/Badges";
 
 
 
@@ -13,7 +13,7 @@ interface MovieSectionProps {
     movies : BoxOfficeMovie[];
 }
 
-export default function MovieSection ({ movies }: { movies: BoxOfficeMovie[] }) {
+export default function MovieSection ({ movies } : MovieSectionProps) {
     const router = useRouter();
     const selectMovie = useMovieBookingStore((state) => state.selectMovie);
 

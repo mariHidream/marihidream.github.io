@@ -168,15 +168,16 @@ export const movieService = {
             rank: kobisRank, // KOBIS 박스오피스 순위 병합
             audiAcc: audiAcc, // KOBIS 누적 관객 수 병합
             cast: data.credits?.cast?.slice(0, 5).map((c: any) => ({
-                name: c.name,
-                character: c.character,
-                profileUrl: c.profile_path ? `https://image.tmdb.org/t/p/w185${c.profile_path}` : null,
+                id: c.id,
+                name: c.name, // 배우 이름
+                character: c.character, // 배역 이름
+                profilePath: c.profile_path ? `https://image.tmdb.org/t/p/w185${c.profile_path}` : null, //프로필 이미지
             })) || [],
             trailerKey: data.videos?.results?.find((v: any) => v.site === 'YouTube' && v.type === 'Trailer')?.key || null,
-            ageRating: getDeterministicAgeRating(data.id),
-            stillCuts: data.images?.backdrops
-                ?.slice(0, 9)
-                .map((img: any) => `https://image.tmdb.org/t/p/w780${img.file_path}`) || [],
+            ageRating: getDeterministicAgeRating(data.id), // 관람 연령
+            stillCuts: data.images?.backdrops?.map(
+                (img: any) => `https://image.tmdb.org/t/p/w780${img.file_path}`
+            ) || [],
             reviews: reviewsData.results?.map((r: any) => ({
                 id: r.id,
                 author: r.author,
@@ -217,5 +218,38 @@ export const movieService = {
             releaseDate: movie.release_date,
             ageRating: getDeterministicAgeRating(movie.id),
         }));
+    },
+
+    getPersonDetails : async (personId : number) => {
+        const res = await fetch(
+         `${TMDB_BASE_URL}/person/${personId}?api_key=${process.env.TMDB_API_KEY}&language=ko-KR&append_to_response=movie_credits,images`,
+            { next: { revalidate: 3600 } }
+        );
+        
+        if (!res.ok) throw new Error('인물 정보를 불러올 수 없습니다.');
+        const data = await res.json();
+
+        return {
+            id: data.id,
+            name: data.name,
+            originalName: data.original_name,
+            profilePath: data.profile_path ? `https://image.tmdb.org/t/p/w500${data.profile_path}` : null,
+            birthday: data.birthday, // ex: "1956-07-09"
+            placeOfBirth: data.place_of_birth, // ex: "Concord, California, USA"
+            // 필모그래피: 인지도가 높은(popularity) 순으로 최대 12개 추출
+            filmography: data.movie_credits?.cast
+                ?.filter((m: any) => m.poster_path)
+                .sort((a: any, b: any) => b.popularity - a.popularity)
+                .map((m: any) => ({
+                    id: m.id,
+                    title: m.title,
+                    posterPath: `https://image.tmdb.org/t/p/w500${m.poster_path}`,
+                })) || [],
+                
+            // 갤러리 (배우 개인 사진)
+            photos: data.images?.profiles
+                ?.slice(0, 10)
+                .map((img: any) => `https://image.tmdb.org/t/p/w500${img.file_path}`) || [],
+        };
     }
 }

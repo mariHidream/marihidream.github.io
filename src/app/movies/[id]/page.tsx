@@ -1,6 +1,6 @@
-import { movieService } from "@/src/api/movieService";
+import { movieService } from "@/src/app/api/movieService";
 import MovieDetailClient from "@/src/components/features/movies/MovieDetailClient";
-import AgeRatingBadge from "@components/ui/AgeRatingBadge";
+import AgeRatingBadge from "@/src/components/ui/Badges";
 
 
 

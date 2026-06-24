@@ -16,7 +16,7 @@ export default function ImageLightbox({images , currentIndex , onClose, onIndexC
     // 이전 이미지로 이동 (무한 루프 방어 코드)
     const handlePrev = (e?: React.MouseEvent) => {
         e?.stopPropagation();
-        onIndexChange((currentIndex-1 + images.length) & images.length);
+        onIndexChange((currentIndex-1 + images.length) % images.length);
     }
 
     // 다음 이미지로 이동 (무한 루프 방어 코드)

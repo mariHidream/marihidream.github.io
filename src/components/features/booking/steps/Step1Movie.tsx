@@ -1,6 +1,6 @@
 "use client";
 
-import AgeRatingBadge from "@components/ui/AgeRatingBadge";
+import AgeRatingBadge from "@/src/components/ui/Badges";
 import { useMovieBookingStore } from "@/src/hooks/useMovieBookingStore";
 import { MovieBase } from "@/src/types/movie";
 import { Check } from "lucide-react";

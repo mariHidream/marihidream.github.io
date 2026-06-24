@@ -1,4 +1,4 @@
-import { movieService } from "@/src/api/movieService";
+import { movieService } from "@/src/app/api/movieService";
 import BookingWizard from "@/src/components/features/booking/BookingWizard";
 
 

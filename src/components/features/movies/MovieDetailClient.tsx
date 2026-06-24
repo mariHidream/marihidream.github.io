@@ -4,11 +4,12 @@ import { useMovieBookingStore } from "@/src/hooks/useMovieBookingStore";
 import { useToastStore } from "@/src/store/useToastStore";
 import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/Tabs";
-import { CalendarCheck, ImageIcon, Share2, User } from "lucide-react";
+import { CalendarCheck, ChevronLeft, ChevronRight, ImageIcon, Share2, User } from "lucide-react";
 import MovieMetrics from "./MovieMetrics";
 import ReviewCard from "./ReviewCard";
 import { useState } from "react";
 import ImageLightbox from "./ImageLightbox";
+import PersonModal from "./PersonModal";
 
 
 export default function MovieDetailClient({ movie }: { movie: any }) {
@@ -16,18 +17,47 @@ export default function MovieDetailClient({ movie }: { movie: any }) {
   const selectMovie = useMovieBookingStore((state) => state.selectMovie);
   const showToast = useToastStore((state) => state.showToast);
 
-  // 💡 2. 라이트박스 제어용 전역 인덱스 상태 선언 (null은 닫힌 상태, 숫자는 열린 상태의 이미지 순서)
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [selectedPersonId, setSelectedPersonId] = useState<number | null>(null);
 
   const handleBooking = () => {
     selectMovie(movie.id, movie.title);
     router.push('/booking');
   };
 
+  // 💡라이트박스 제어용 전역 인덱스 상태 선언 (null은 닫힌 상태, 숫자는 열린 상태의 이미지 순서)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
     showToast('영화 상세 주소가 복사되었습니다.', 'success');
   };
+
+  // 💡 더보기 클릭 시 마다 노출할 이미지의 개수를 제어하는 상태
+  const [visibleGalleryCount, setVisibleGalleryCount] = useState(6); 
+  const GALLERY_CHUNK_SIZE = 12; // 한 번에 추가로 불러올 이미지 청크 단위
+
+  // 전체 스틸컷 중 현재 상태값(visibleGalleryCount)만큼만 잘라서 뷰에 전달
+  const visibleStillCuts = movie.stillCuts?.slice(0, visibleGalleryCount) || [];
+
+  // 남은 이미지 개수 계산
+  const remainingImagesCount = (movie.stillCuts?.length || 0) - visibleGalleryCount;
+
+  // 이미지 더보기 액션 핸들러
+  const handleLoadMoreGallery = () => {
+    setVisibleGalleryCount((prev) => prev + GALLERY_CHUNK_SIZE);
+  };
+
+  // 💡 관람평 페이지네이션 상태 관리 (한 페이지당 5개씩)
+  const [reviewPage, setReviewPage] = useState(1);
+  const REVIEWS_PER_PAGE = 5;
+  const totalReviews = movie.reviews?.length || 0;
+  const totalPages = Math.ceil(totalReviews / REVIEWS_PER_PAGE);
+
+  // 현재 페이지에 해당하는 리뷰만 추출
+  const currentReviews = movie.reviews?.slice(
+    (reviewPage - 1) * REVIEWS_PER_PAGE, 
+    reviewPage * REVIEWS_PER_PAGE
+  );
 
   return (
     <div className="flex flex-col md:flex-row gap-12">
@@ -51,26 +81,38 @@ export default function MovieDetailClient({ movie }: { movie: any }) {
                     <p className="text-lg font-medium">{movie.overview}</p>
                     <h3 className="text-xl font-bold text-white mb-4">스틸컷 ({movie.stillCuts.length})</h3>
                     <div className="pt-4">
-                        {movie.stillCuts && movie.stillCuts.length > 0 ? (
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                {movie.stillCuts.map((url: string, idx: number) => (
-                                    <div 
-                                        key={idx} 
-                                        // 💡 3. 이미지 그리드를 클릭했을 때 해당 스틸컷의 고유 인덱스 번호를 상태에 주입하여 모달 오픈
-                                        onClick={() => setLightboxIndex(idx)}
-                                        className="relative aspect-video rounded-xl overflow-hidden bg-slate-900 border border-slate-800 shadow-md group cursor-pointer"
-                                    >
-                                        <img 
-                                            src={url} 
-                                            alt={`${movie.title} 스틸컷 ${idx + 1}`} 
-                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                            loading="lazy"
-                                        />
-                                        <div className="absolute inset-0 bg-slate-950/0 group-hover:bg-slate-950/40 transition-colors duration-300 flex items-center justify-center">
-                                            <ImageIcon className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-lg" />
+                        {visibleStillCuts.length > 0 ? (
+                            <div className="space-y-6">
+                                {/* 현재 확보된 청크만큼만 그리드 레이아웃으로 렌더링 */}
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    {visibleStillCuts.map((url: string, idx: number) => (
+                                        <div 
+                                            key={idx} 
+                                            onClick={() => setLightboxIndex(idx)}
+                                            className="relative aspect-video rounded-xl overflow-hidden bg-slate-900 border border-slate-800 shadow-md group cursor-pointer"
+                                        >
+                                            <img 
+                                                src={url} 
+                                                alt={`${movie.title} 스틸컷 ${idx + 1}`} 
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                                                loading="lazy" 
+                                            />
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
+                                        
+                                {/* 💡 온디맨드 더보기 활성화 조건 컨트롤바 */}
+                                {remainingImagesCount > 0 && (
+                                    <button 
+                                        onClick={handleLoadMoreGallery}
+                                        className="w-full py-3.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-teal-400 font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg group"
+                                    >
+                                        <span>스틸컷 더보기</span>
+                                        <span className="text-xs px-2 py-0.5 bg-slate-800 text-slate-500 rounded-md group-hover:text-slate-300 transition-colors">
+                                        {remainingImagesCount}개 남음
+                                        </span>
+                                    </button>
+                                )}
                             </div>
                         ) : (
                             <div className="w-full py-16 flex flex-col items-center justify-center bg-slate-900 rounded-2xl border border-slate-800">
@@ -84,7 +126,7 @@ export default function MovieDetailClient({ movie }: { movie: any }) {
                 <TabsContent value="cast" className="pt-4">
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
                         {movie.cast.map((actor: any, idx: number) => (
-                            <div key={idx} className="flex items-center gap-4 bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <div key={idx} onClick={() => setSelectedPersonId(actor.id)}className="flex items-center gap-4 bg-slate-900 p-3 rounded-xl border border-slate-800">
                                 {actor.profilePath ? (
                                     <img src={actor.profilePath} alt={actor.name} className="w-12 h-12 rounded-full object-cover" />
                                 ) : (
@@ -95,6 +137,7 @@ export default function MovieDetailClient({ movie }: { movie: any }) {
                                 <div>
                                     <p className="text-sm font-bold text-white">{actor.name}</p>
                                     <p className="text-xs text-slate-500">{actor.character}</p>
+                                    <p className="text-xs text-slate-500">{actor.id}</p>
                                 </div>
                             </div>
                         ))}
@@ -122,19 +165,42 @@ export default function MovieDetailClient({ movie }: { movie: any }) {
                 </TabsContent>
 
                 <TabsContent value="reviews" className="pt-4 space-y-4">
-                    {movie.reviews && movie.reviews.length > 0 ? (
+                    {currentReviews && currentReviews.length > 0 ? (
                         <div className="flex flex-col gap-4">
-                            {/* 우측 상단 안내 문구 */}
                             <div className="flex justify-end mb-2">
                                 <span className="text-xs text-slate-500 bg-slate-800/50 px-3 py-1.5 rounded-full">
                                     해외 관람객의 리뷰는 AI 번역을 지원합니다.
                                 </span>
                             </div>
                             
-                            {/* 개별 리뷰 카드 마운트 */}
-                            {movie.reviews.map((review: any) => (
+                            {currentReviews.map((review: any) => (
                                 <ReviewCard key={review.id} review={review} />
                             ))}
+
+                            {/* 페이지네이션 컨트롤바 */}
+                            {totalPages > 1 && (
+                                <div className="flex items-center justify-center gap-4 pt-6 mt-4 border-t border-slate-800">
+                                    <button 
+                                        onClick={() => setReviewPage(prev => Math.max(1, prev - 1))}
+                                        disabled={reviewPage === 1}
+                                        className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 disabled:opacity-30 hover:bg-slate-800 transition-all"
+                                    >
+                                        <ChevronLeft className="w-5 h-5" />
+                                    </button>
+                                    
+                                    <span className="text-sm font-bold text-slate-300">
+                                        {reviewPage} <span className="text-slate-600">/ {totalPages}</span>
+                                    </span>
+
+                                    <button 
+                                        onClick={() => setReviewPage(prev => Math.min(totalPages, prev + 1))}
+                                        disabled={reviewPage === totalPages}
+                                        className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 disabled:opacity-30 hover:bg-slate-800 transition-all"
+                                    >
+                                        <ChevronRight className="w-5 h-5" />
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     ) : (
                         <div className="w-full py-16 flex flex-col items-center justify-center bg-slate-900 rounded-2xl border border-slate-800">
@@ -148,7 +214,7 @@ export default function MovieDetailClient({ movie }: { movie: any }) {
 
         {/* 우측 액션 패널 (1/3) */}
         <div className="w-full md:w-1/3 space-y-4">
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl sticky top-24">
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl sticky top-30">
                 <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
                     <span className="text-slate-400 font-bold">관람객 평점</span>
                     <span className="text-3xl font-black text-amber-400">{movie.voteAverage.toFixed(1)}</span>
@@ -171,12 +237,19 @@ export default function MovieDetailClient({ movie }: { movie: any }) {
             </div>
         </div>
 
-        {/* 💡 4. 컴포넌트 최하단에 스틸컷 라이트박스 모달 마운트 */}
+        {/* 💡 스틸컷 라이트박스 모달 마운트 */}
         <ImageLightbox 
             images={movie.stillCuts || []} 
             currentIndex={lightboxIndex} 
             onClose={() => setLightboxIndex(null)} 
             onIndexChange={setLightboxIndex} 
+        />
+
+
+        {/* 💡 인물 상세 모달 마운트 */}
+        <PersonModal 
+            personId={selectedPersonId} 
+            onClose={() => setSelectedPersonId(null)} 
         />
     </div>
   );
