@@ -87,7 +87,7 @@ export default function VisualSlider({ movies }: VisualSliderProps) {
                         </div>
 
                         {/* 우측 시네마 미디어 카드 */}
-                        <div className="md:col-span-4 relative w-full bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl group">
+                        <div className="hidden md:block md:col-span-4 relative w-full bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl group">
                             <img 
                                 src={movie.posterPath} 
                                 alt={movie.title}

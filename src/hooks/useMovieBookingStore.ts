@@ -4,24 +4,24 @@ import { create } from 'zustand';
 export type BookingStep = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 interface BookingSession {
-    currentStep : BookingStep;
-    selectedMovieId : number | null;
-    selectedMovieTitle : string | null;
-    selectedDate : string | null;
-    selectedTheater : string | null;
-    selectedSeats : string[];
-    totalPrice: number;
+  currentStep : BookingStep;
+  selectedMovieId : number | null;
+  selectedMovieTitle : string | null;
+  selectedDate : string | null;
+  selectedTheater : string | null;
+  selectedSeats : string[];
+  totalPrice: number;
 
-    //action
-    setStep : (step: BookingStep) => void;
-    nextStep : () => void;
-    prevStep : () => void;
-    selectMovie : () => void;
-    selectDate : () => void;
-    selectTheater : () => void;
-    toggleSeat: (seat: string) => void;
-    setTotalPrice : (price : string) => void;
-    resetBooking : () => void;
+  //action
+  setStep : (step: BookingStep) => void;
+  nextStep : () => void;
+  prevStep : () => void;
+  selectMovie : (id: number, title: string) => void;
+  selectDate : (date : string) => void;
+  selectTheater : (theater : string) => void;
+  toggleSeat: (seat: string) => void;
+  setTotalPrice : (price : string) => void;
+  resetBooking : () => void;
 }
 
 
