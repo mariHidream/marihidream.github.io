@@ -1,7 +1,10 @@
 "use client";
 
 import { useMovieBookingStore } from "@/src/hooks/useMovieBookingStore";
-import { ChevronLeft, CreditCard, Loader2, Smartphone, Wallet } from "lucide-react";
+import { useAuthStore } from "@/src/store/useAuthStore";
+import { useToastStore } from "@/src/store/useToastStore";
+import { CreditCard, Loader2, Smartphone, Ticket, Wallet } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const PAYMENT_METHODS = [
@@ -10,70 +13,125 @@ const PAYMENT_METHODS = [
   { id: 'toss', name: '토스페이', icon: Wallet },
 ];
 
+export default function Step6Payment() {
+  const router = useRouter();
+  const { user, isLoggedIn } = useAuthStore();
+  const showToast = useToastStore((state) => state.showToast);
+    
+  const { 
+    selectedMovieId, selectedMovieTitle, selectedMoviePosterPath, selectedDate, 
+    selectedTheater, selectedSeats, totalPrice, 
+    nextStep, prevStep 
+  } = useMovieBookingStore();
 
-export default function Step6Payment (){
-    const {totalPrice, nextStep, prevStep} = useMovieBookingStore();
-    const [selectedMethod, setSelectedMethod] = useState(PAYMENT_METHODS[0].id);
-    const [isProcessing, setIsProcessing] = useState(false);
+  const [selectedMethod, setSelectedMethod] = useState(PAYMENT_METHODS[0].id);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-    // 가상의 결제 비동기 프로세스
-    const handlePayment = async () => {
-        setIsProcessing(true);
-        // 실제 PG사 연동 시 이곳에 결제 검증 로직이 들어갑니다.
-        await new Promise(resolve => setTimeout(resolve, 500)); 
-        setIsProcessing(false);
-        nextStep(); // 결제 완료 후 7단계로 이동
-    };
+  const handlePayment = async () => {
+    // 1. 유저 검증
+    if (!isLoggedIn || !user?.email) {
+      showToast('로그인이 필요합니다.', 'error');
+      router.push('/login?callbackUrl=/booking');
+      return;
+    }
 
-    return (
-        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 h-full flex flex-col">
-            <h2 className="text-2xl font-black text-white">결제 수단을 선택해주세요</h2>
+    setIsProcessing(true);
+
+    try {
+      // 2. 결제 API 서버 전송
+      const response = await fetch('/api/booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            userEmail: user.email,
+            selectedMovieId,
+            selectedMovieTitle,
+            selectedMoviePosterPath,
+            selectedDate,
+            selectedTheater,
+            selectedSeats,
+            totalPrice,
+            paymentMethod: selectedMethod // 선택된 결제 수단도 백엔드로 전송 가능
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || '결제에 실패했습니다.');
+      }
+
+      // 3. 결제 성공 시 다음 단계(Step 7)로 이동
+      nextStep();
+
+    } catch (error: any) {
+      showToast(error.message, 'error');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-8 py-8 animate-in fade-in duration-300">
+      <div className="text-center space-y-2">
+        <h2 className="text-2xl font-black text-white">결제 진행</h2>
+        <p className="text-slate-400 text-sm">결제 수단을 선택하고 금액을 확인해 주세요.</p>
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-lg font-bold text-white">결제 수단</h3>
+        <div className="grid grid-cols-3 gap-4">
+          {PAYMENT_METHODS.map((method) => {
+            const Icon = method.icon;
+            const isSelected = selectedMethod === method.id;
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {PAYMENT_METHODS.map((method) => {
-                    const Icon = method.icon;
-                    const isSelected = selectedMethod === method.id;
-                    return (
-                        <button
-                            key={method.id}
-                            onClick={() => setSelectedMethod(method.id)}
-                            disabled={isProcessing}
-                            className={`p-6 rounded-2xl border-2 flex flex-col items-center gap-4 transition-all ${
-                                isSelected 
-                                ? 'border-teal-500 bg-teal-500/10 text-teal-400' 
-                                : 'border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-600'
-                            } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        >
-                            <Icon className="w-8 h-8" />
-                            <span className="font-bold">{method.name}</span>
-                        </button>
-                    );
-                })}
-            </div>
-
-            <div className="bg-slate-950 p-6 rounded-2xl border border-slate-800 flex justify-between items-center">
-                <span className="text-slate-400 font-bold">결제 예정 금액</span>
-                <span className="text-2xl font-black text-teal-400">{totalPrice.toLocaleString()}원</span>
-            </div>
-
-            <div className="flex-grow" />
-
-            <div className="flex justify-between items-center pt-6 border-t border-slate-800">
-                <button onClick={prevStep} disabled={isProcessing} className="flex items-center gap-2 px-6 py-3 text-slate-400 hover:text-white disabled:opacity-50 transition-colors">
-                    <ChevronLeft className="w-5 h-5" /> 이전 (내역 확인)
-                </button>
-                <button 
-                    onClick={handlePayment} 
-                    disabled={isProcessing}
-                    className="flex items-center gap-2 px-10 py-3.5 bg-teal-500 hover:bg-teal-400 text-slate-950 font-black rounded-xl transition-all disabled:opacity-70 disabled:cursor-not-allowed"
-                >
-                    {isProcessing ? (
-                        <><Loader2 className="w-5 h-5 animate-spin" /> 결제 진행 중...</>
-                    ) : (
-                        `${totalPrice.toLocaleString()}원 결제하기`
-                    )}
-                </button>
-            </div>
+            return (
+              <button
+                key={method.id}
+                onClick={() => setSelectedMethod(method.id)}
+                className={`flex flex-col items-center justify-center py-6 rounded-2xl border-2 transition-all ${
+                  isSelected
+                    ? 'border-teal-400 bg-teal-400/10 text-teal-400'
+                    : 'border-slate-800 bg-slate-900/50 text-slate-400 hover:border-slate-600 hover:text-white'
+                }`}
+              >
+                <Icon className={`w-8 h-8 mb-3 ${isSelected ? 'animate-bounce' : ''}`} />
+                <span className="text-sm font-bold">{method.name}</span>
+              </button>
+            );
+          })}
         </div>
-    )
+      </div>
+
+      {/* 최종 결제 금액 확인 요약바 */}
+      <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-8 flex items-center justify-between shadow-xl">
+        <span className="text-slate-400 font-bold flex items-center gap-2">
+          <Ticket className="w-5 h-5" /> 총 결제 금액
+        </span>
+        <div className="text-3xl font-black text-teal-400">
+          {totalPrice?.toLocaleString()} <span className="text-lg text-slate-500">원</span>
+        </div>
+      </div>
+
+      <div className="flex gap-4 pt-4">
+        <button
+          onClick={prevStep}
+          disabled={isProcessing}
+          className="w-1/3 py-4 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-2xl transition-colors disabled:opacity-50"
+        >
+          이전 단계
+        </button>
+        <button
+          onClick={handlePayment}
+          disabled={isProcessing}
+          className="w-2/3 flex justify-center items-center py-4 bg-teal-400 hover:bg-teal-300 text-slate-950 font-black rounded-2xl transition-all shadow-lg shadow-teal-500/20 disabled:opacity-50 group"
+        >
+          {isProcessing ? (
+            <span className="flex items-center gap-2"><Loader2 className="w-6 h-6 animate-spin" /> 결제 처리 중...</span>
+          ) : (
+            <span className="flex items-center gap-2"><CreditCard className="w-6 h-6" /> 결제하기</span>
+          )}
+        </button>
+      </div>
+    </div>
+  );
 }

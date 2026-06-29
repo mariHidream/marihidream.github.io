@@ -7,6 +7,7 @@ interface BookingSession {
   currentStep : BookingStep;
   selectedMovieId : number | null;
   selectedMovieTitle : string | null;
+  selectedMoviePosterPath : string | null;
   selectedDate : string | null;
   selectedTheater : string | null;
   selectedSeats : string[];
@@ -16,7 +17,7 @@ interface BookingSession {
   setStep : (step: BookingStep) => void;
   nextStep : () => void;
   prevStep : () => void;
-  selectMovie : (id: number, title: string) => void;
+  selectMovie : (id: number, title: string, posterPath : string) => void;
   selectDate : (date : string) => void;
   selectTheater : (theater : string) => void;
   toggleSeat: (seat: string) => void;
@@ -29,6 +30,7 @@ export const useMovieBookingStore = create<BookingSession>((set) => ({
   currentStep: 1,
   selectedMovieId: null,
   selectedMovieTitle: null,
+  selectedMoviePosterPath : null,
   selectedDate: null,
   selectedTheater: null,
   selectedSeats: [],
@@ -38,7 +40,12 @@ export const useMovieBookingStore = create<BookingSession>((set) => ({
   nextStep: () => set((state) => ({ currentStep: (state.currentStep + 1) as BookingStep })),
   prevStep: () => set((state) => ({ currentStep: (state.currentStep - 1) as BookingStep })),
   
-  selectMovie: (id, title) => set({ selectedMovieId: id, selectedMovieTitle: title, currentStep: 2 }), // 영화 선택 시 자동 스텝업
+  selectMovie: (id, title, posterPath) => set({ 
+    selectedMovieId: id, 
+    selectedMovieTitle: title,
+     currentStep: 2,
+     selectedMoviePosterPath : posterPath,
+  }), // 영화 선택 시 자동 스텝업
   selectDate: (date) => set({ selectedDate: date }),
   selectTheater: (theater) => set({ selectedTheater: theater }),
   
@@ -56,6 +63,7 @@ export const useMovieBookingStore = create<BookingSession>((set) => ({
     currentStep: 1,
     selectedMovieId: null,
     selectedMovieTitle: null,
+    selectedMoviePosterPath : null,
     selectedDate: null,
     selectedTheater: null,
     selectedSeats: [],

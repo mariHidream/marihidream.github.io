@@ -30,7 +30,7 @@ export async function POST(request : Request){
         // 브라우저 자바스크립트로 접근할 수 없어 XSS 공격 방어에 탁월합니다.
         response.cookies.set('access_token', mockAccessToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: false,
             sameSite: 'lax',
             maxAge: 60 * 60 * 24, // 1일 유지
             path: '/',

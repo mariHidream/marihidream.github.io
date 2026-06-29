@@ -6,8 +6,6 @@ import { MovieBase } from "@/src/types/movie";
 import { Check } from "lucide-react";
 
 
-
-
 export default function Step1Movie({movies}: {movies: MovieBase[]}) {
 
     const { selectedMovieId, selectMovie } = useMovieBookingStore();
@@ -21,7 +19,7 @@ export default function Step1Movie({movies}: {movies: MovieBase[]}) {
                     return (
                         <button
                             key={movie.id}
-                            onClick={() => selectMovie(movie.id, movie.title)}
+                            onClick={() => selectMovie(movie.id, movie.title, movie.posterPath)}
                             className={`relative flex flex-col items-center p-3 rounded-xl border-2 transition-all overflow-hidden ${
                                 isSelected 
                                 ? 'border-teal-500 bg-teal-500/10' 
