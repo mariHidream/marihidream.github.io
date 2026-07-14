@@ -20,7 +20,7 @@ export default function AgeRatingBadge({ rating, showText = false }: AgeRatingBa
   if (showText) {
     return (
       <div className="flex items-center gap-2">
-        <span className={`w-5 h-5 ${current.bg} text-slate-950 font-black text-[11px] rounded flex items-center justify-center select-none`}>
+        <span className={`w-6 h-6 ${current.bg} text-slate-950 font-black text-[10px] rounded flex items-center justify-center select-none`}>
           {current.text}
         </span>
         <span className="text-sm font-bold text-slate-300">{current.fullText}</span>

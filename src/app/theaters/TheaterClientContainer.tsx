@@ -94,35 +94,39 @@ export default function TheaterClientContainer({ initialTheaters }: Props) {
                 </div>
 
                 {/* 중단: 브랜드 필터 */}
-                <div className="flex flex-wrap gap-2 pt-4 border-t border-slate-800/50">
-                <span className="text-sm font-bold text-slate-500 py-2 mr-2">브랜드</span>
-                    {BRANDS.map((brand) => (
-                        <button
-                            key={brand}
-                            onClick={() => setSelectedBrand(brand)}
-                            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${
-                                selectedBrand === brand ? 'bg-slate-200 text-slate-950 shadow-md' : 'bg-slate-800 text-slate-400 hover:text-white border border-slate-700'
-                            }`}
-                        >
-                            {brand}
-                        </button>
-                    ))}
+                <div className="flex flex-nowrap gap-2 pt-4 border-t border-slate-800/50">
+                    <span className="flex-shrink-0 min-w-[38px] text-sm font-bold text-slate-500 py-2 mr-2">브랜드</span>
+                    <div className="flex flex-wrap gap-2">
+                        {BRANDS.map((brand) => (
+                            <button
+                                key={brand}
+                                onClick={() => setSelectedBrand(brand)}
+                                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                                    selectedBrand === brand ? 'bg-slate-200 text-slate-950 shadow-md' : 'bg-slate-800 text-slate-400 hover:text-white border border-slate-700'
+                                }`}
+                            >
+                                {brand}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
                 {/* 하단: 지역 필터 */}
-                <div className="flex flex-wrap gap-2">
-                    <span className="text-sm font-bold text-slate-500 py-2 mr-2">지 역</span>
-                    {regions.map((region) => (
-                        <button
-                            key={region}
-                            onClick={() => setSelectedRegion(region)}
-                            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${
-                                selectedRegion === region ? 'bg-teal-500 text-slate-950 shadow-md shadow-teal-500/20' : 'bg-slate-800 text-slate-400 hover:text-white border border-slate-700'
-                            }`}
-                        >
-                            {region}
-                        </button>
-                    ))}
+                <div className="flex flex-nowrap gap-2">
+                    <span className="flex-shrink-0 min-w-[38px] text-sm font-bold text-slate-500 py-2 mr-2">지 역</span>
+                    <div className="flex flex-wrap gap-2">
+                        {regions.map((region) => (
+                            <button
+                                key={region}
+                                onClick={() => setSelectedRegion(region)}
+                                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                                    selectedRegion === region ? 'bg-teal-500 text-slate-950 shadow-md shadow-teal-500/20' : 'bg-slate-800 text-slate-400 hover:text-white border border-slate-700'
+                                }`}
+                            >
+                                {region}
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
 

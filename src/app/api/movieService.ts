@@ -8,15 +8,49 @@ const KOBIS_BASE_URL = 'http://www.kobis.or.kr/kobisopenapi/webservice/rest';
 
 const getTargetDate = () => format(subDays(new Date(), 1), 'yyyyMMdd');
 
-// 헬퍼 함수: ID 기반 결정론적 연령 생성기 (실제 운영 환경의 데이터 미제공 방어용)
-const getDeterministicAgeRating = (id: number): 'ALL' | '12' | '15' | '19' => {
-  const ratings: ('ALL' | '12' | '15' | '19')[] = ['ALL', '12', '15', '19'];
-  return ratings[id % 4];
+
+const extractAgeRating = (releaseDatesResults: any[]): 'ALL' | '12' | '15' | '19' => {
+    if (!releaseDatesResults || !Array.isArray(releaseDatesResults)) return 'ALL';
+
+    // 1. 한국(KR) 데이터 탐색, 없으면 미국(US) 데이터 폴백
+    let targetCountry = releaseDatesResults.find((r) => r.iso_3166_1 === 'KR');
+    if (!targetCountry) {
+        targetCountry = releaseDatesResults.find((r) => r.iso_3166_1 === 'US');
+    }
+
+    if (!targetCountry || !targetCountry.release_dates || targetCountry.release_dates.length === 0) {
+        return 'ALL';
+    }
+
+    // 2. certification 값이 비어있지 않은 첫 번째 데이터 추출
+    const certObj = targetCountry.release_dates.find((d: any) => d.certification !== '');
+    const rawCert = certObj ? certObj.certification.toUpperCase() : '';
+
+    // 3. TMDB 문자열을 우리 시스템 규격으로 정규화 (Normalization)
+    if (rawCert === '') return 'ALL';
+    if (rawCert.includes('ALL') || rawCert === 'G' || rawCert === '전체관람가') return 'ALL';
+    if (rawCert.includes('12') || rawCert === 'PG' || rawCert === '12세 이상 관람가') return '12';
+    if (rawCert.includes('15') || rawCert === 'PG-13' || rawCert === '15세 이상 관람가') return '15';
+    if (rawCert.includes('18') || rawCert.includes('19') || rawCert === 'R' || rawCert === 'NC-17' || rawCert.includes('청소년')) return '19';
+
+    return 'ALL'; // 알 수 없는 포맷 방어
+}
+
+const fetchAgeRatingForList = async (movieId: number): Promise<'ALL' | '12' | '15' | '19'> => {
+    try {
+        const res = await fetch(
+            `${TMDB_BASE_URL}/movie/${movieId}/release_dates?api_key=${process.env.TMDB_API_KEY}`,
+            { next: { revalidate: 3600 } }
+        );
+        const data = await res.json();
+        return extractAgeRating(data.results);
+    } catch {
+        return 'ALL';
+    }
 };
 
-
 export const movieService = {
-    // 1. 비쥬얼 영역용: 현재 상영중인 영화 (TMDB Now Playing)
+    // 1. 현재 상영중인 영화 (TMDB Now Playing)
     getNowPlaying : async (limit?: number): Promise<MovieBase[]> => {
 
         const res = await fetch(
@@ -35,22 +69,27 @@ export const movieService = {
         if (limit) {
             movies = movies.slice(0, limit);
         }
+       
+        const enrichedMovies = await Promise.all(
+            movies.map(async (movie: any) => {
+                const ageRating = await fetchAgeRatingForList(movie.id);
+                return {
+                    id: movie.id,
+                    title: movie.title,
+                    posterPath: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+                    backdropPath: `https://image.tmdb.org/t/p/original${movie.backdrop_path}`,
+                    overview: movie.overview,
+                    voteAverage: movie.vote_average,
+                    releaseDate: movie.release_date,
+                    ageRating: ageRating, // 추출된 실제 등급 주입
+                };
+            })
+        );
 
-        // 만약 "한국+해외 영화를 모두 보여주되, 아무도 모르는 마이너한 인도/독립 영화를 거르고 싶다"면
-        // TMDB의 투표수(vote_count)나 인기도(popularity)가 일정 수치 이상인 메이저 상업 영화만 필터링합니다.
-        return movies.map((movie: any) => ({
-            id: movie.id,
-            title: movie.title,
-            posterPath: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-            backdropPath: `https://image.tmdb.org/t/p/original${movie.backdrop_path}`,
-            overview: movie.overview,
-            voteAverage: movie.vote_average,
-            releaseDate: movie.release_date,
-            ageRating: getDeterministicAgeRating(movie.id),
-        }));
+        return enrichedMovies;
 
     },
-    // 2. 컨텐츠 1: 국내 일별 박스오피스 순위 (KOBIS + TMDB 매핑 매시업)
+    // 2. 국내 일별 박스오피스 (KOBIS + TMDB)
     getBoxOffice : async (): Promise<BoxOfficeMovie> => {
         const targetDate = getTargetDate();
     
@@ -73,41 +112,45 @@ export const movieService = {
                     );
                     const tmdbData = await tmdbRes.json();
                     const tmdbMovie = tmdbData.results?.[0];
+                    const tmdbId = tmdbMovie?.id;
+
+                    // 💡 검색된 TMDB ID가 있으면 해당 영화의 등급을 가져옵니다.
+                    const ageRating = tmdbId ? await fetchAgeRatingForList(tmdbId) : 'ALL';
 
                     return {
-                            id: tmdbMovie?.id || Number(kobisMovie.movieCd),
-                            title: title,
-                            posterPath: tmdbMovie?.poster_path ? `https://image.tmdb.org/t/p/w500${tmdbMovie.poster_path}` : '/fallback-poster.png',
-                            backdropPath: tmdbMovie?.backdrop_path ? `https://image.tmdb.org/t/p/original${tmdbMovie.backdrop_path}` : '',
-                            overview: tmdbMovie?.overview || '등록된 줄거리가 없습니다.',
-                            voteAverage: tmdbMovie?.vote_average || 0,
-                            releaseDate: kobisMovie.openDt,
-                            rank: kobisMovie.rank,
-                            audiAcc: kobisMovie.audiAcc,
-                            rankInten: kobisMovie.rankInten,
-                             ageRating: getDeterministicAgeRating(tmdbMovie?.id || Number(kobisMovie.movieCd)),
+                        id: tmdbMovie?.id || Number(kobisMovie.movieCd),
+                        title: title,
+                        posterPath: tmdbMovie?.poster_path ? `https://image.tmdb.org/t/p/w500${tmdbMovie.poster_path}` : '/fallback-poster.png',
+                        backdropPath: tmdbMovie?.backdrop_path ? `https://image.tmdb.org/t/p/original${tmdbMovie.backdrop_path}` : '',
+                        overview: tmdbMovie?.overview || '등록된 줄거리가 없습니다.',
+                        voteAverage: tmdbMovie?.vote_average || 0,
+                        releaseDate: kobisMovie.openDt,
+                        rank: kobisMovie.rank,
+                        audiAcc: kobisMovie.audiAcc,
+                        rankInten: kobisMovie.rankInten,
+                        ageRating: ageRating,
                     };
                 } catch {
-                return {
-                    id: Number(kobisMovie.movieCd),
-                    title: title,
-                    posterPath: '/fallback-poster.png',
-                    backdropPath: '',
-                    overview: '정보를 불러오지 못했습니다.',
-                    voteAverage: 0,
-                    releaseDate: kobisMovie.openDt,
-                    rank: kobisMovie.rank,
-                    audiAcc: kobisMovie.audiAcc,
-                    rankInten: kobisMovie.rankInten,
-                    ageRating: getDeterministicAgeRating(Number(kobisMovie.movieCd)),
-                };
+                    return {
+                        id: Number(kobisMovie.movieCd),
+                        title: title,
+                        posterPath: '/fallback-poster.png',
+                        backdropPath: '',
+                        overview: '정보를 불러오지 못했습니다.',
+                        voteAverage: 0,
+                        releaseDate: kobisMovie.openDt,
+                        rank: kobisMovie.rank,
+                        audiAcc: kobisMovie.audiAcc,
+                        rankInten: kobisMovie.rankInten,
+                        ageRating: 'ALL',
+                    };
                 }
             })
         );
 
         return enrichedList;
     },
-
+    // 3. 영화 상세 정보
     getMovieDetails: async (movieId : string) => {
        // 💡 [핵심 수정 1] append_to_response에 'images' 추가 및 include_image_language 파라미터 주입
         const tmdbPromise = fetch(
@@ -152,6 +195,8 @@ export const movieService = {
             console.error("KOBIS 데이터 매핑 실패:", error);
         }
 
+        // 💡 위에서 만든 헬퍼 함수로 응답 데이터 안의 release_dates를 파싱합니다.
+        const actualAgeRating = extractAgeRating(data.release_dates?.results);
 
         return {
             id: data.id,
@@ -174,7 +219,7 @@ export const movieService = {
                 profilePath: c.profile_path ? `https://image.tmdb.org/t/p/w185${c.profile_path}` : null, //프로필 이미지
             })) || [],
             trailerKey: data.videos?.results?.find((v: any) => v.site === 'YouTube' && v.type === 'Trailer')?.key || null,
-            ageRating: getDeterministicAgeRating(data.id), // 관람 연령
+            ageRating: actualAgeRating, // 💡 실제 파싱된 등급 주입
             stillCuts: data.images?.backdrops?.map(
                 (img: any) => `https://image.tmdb.org/t/p/w780${img.file_path}`
             ) || [],
@@ -187,8 +232,7 @@ export const movieService = {
             })) || [],
         };
     },
-
-
+    // 4. 개봉 예정작 (Upcoming)
     getUpcoming : async (limit?: number): Promise<MovieBase[]> => {
         const res = await fetch(
             `${TMDB_BASE_URL}/movie/upcoming?api_key=${process.env.TMDB_API_KEY}&language=ko-KR&region=KR&page=1`,
@@ -208,18 +252,25 @@ export const movieService = {
             movies = movies.slice(0, limit);
         }
 
-        return movies.map((movie: any) => ({
-            id: movie.id,
-            title: movie.title,
-            posterPath: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-            backdropPath: movie.backdrop_path ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}` : '',
-            overview: movie.overview,
-            voteAverage: movie.vote_average,
-            releaseDate: movie.release_date,
-            ageRating: getDeterministicAgeRating(movie.id),
-        }));
-    },
+        // 💡 병렬(Promise.all)로 각 영화의 연령 등급을 별도로 가져와 매핑합니다.
+        const enrichedMovies = await Promise.all(
+            movies.map(async (movie: any) => {
+                const ageRating = await fetchAgeRatingForList(movie.id);
+                return {
+                    id: movie.id,
+                    title: movie.title,
+                    posterPath: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+                    backdropPath: movie.backdrop_path ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}` : '',
+                    overview: movie.overview,
+                    voteAverage: movie.vote_average,
+                    releaseDate: movie.release_date,
+                    ageRating: ageRating, // 추출된 실제 등급 주입
+                };
+            })
+        );
 
+        return enrichedMovies;
+    },
     getPersonDetails : async (personId : number) => {
         const res = await fetch(
          `${TMDB_BASE_URL}/person/${personId}?api_key=${process.env.TMDB_API_KEY}&language=ko-KR&append_to_response=movie_credits,images`,
